@@ -1,0 +1,1125 @@
+/* ============================================================
+   GLOBAL RESET & VARIABLES
+   ============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --neon-primary: #b300ff;
+    --neon-secondary: #00f5ff;
+    --neon-accent: #ff00e6;
+    --neon-glow: rgba(179, 0, 255, 0.6);
+    --neon-glow2: rgba(0, 245, 255, 0.4);
+    --bg-deep: #05000a;
+    --bg-panel: rgba(10, 2, 20, 0.92);
+    --text-primary: #ffffff;
+    --text-secondary: #d4b0ff;
+    --text-dim: #664488;
+    --font-main: 'Segoe UI', 'Courier New', monospace;
+}
+
+html,
+body {
+    font-family: var(--font-main);
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* ============================================================
+   MATRIX RAIN CANVAS
+   ============================================================ */
+#matrixCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.95;
+}
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+.screen {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.6s ease;
+}
+.screen.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.96) translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes glitchPulse {
+    0%,
+    100% {
+        text-shadow: 0 0 10px var(--neon-glow), 0 0 40px var(--neon-glow), 0 0 80px var(--neon-secondary);
+    }
+    50% {
+        text-shadow: 0 0 20px var(--neon-accent), 0 0 60px var(--neon-accent), 0 0 100px var(--neon-primary);
+    }
+}
+
+/* ============================================================
+   LOGIN SCREEN
+   ============================================================ */
+.login-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, rgba(179, 0, 255, 0.08) 0%, var(--bg-deep) 80%);
+    position: relative;
+    z-index: 2;
+}
+
+.login-box {
+    background: var(--bg-panel);
+    border: 2px solid var(--neon-primary);
+    border-radius: 24px;
+    padding: 50px 44px;
+    width: 440px;
+    max-width: 94%;
+    backdrop-filter: blur(30px);
+    box-shadow: 0 0 80px var(--neon-glow), inset 0 0 60px rgba(179, 0, 255, 0.06);
+    position: relative;
+    z-index: 3;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 34px;
+}
+
+.login-header h1 {
+    font-size: 34px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary), var(--neon-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    animation: glitchPulse 3s infinite;
+}
+
+.login-header .subtitle {
+    color: var(--neon-secondary);
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px var(--neon-glow2);
+    margin-bottom: 4px;
+}
+
+.login-header .sub-sub {
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+    text-transform: capitalize;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(179, 0, 255, 0.05);
+    border: 1px solid rgba(179, 0, 255, 0.20);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--font-main);
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--neon-primary);
+    box-shadow: 0 0 30px var(--neon-glow), inset 0 0 30px rgba(179, 0, 255, 0.05);
+    background: rgba(179, 0, 255, 0.08);
+}
+
+.input-group input::placeholder {
+    color: #443366;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-accent));
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 900;
+    font-family: var(--font-main);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    box-shadow: 0 0 30px var(--neon-glow);
+    margin-top: 6px;
+}
+
+.btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 50px var(--neon-glow), 0 0 80px var(--neon-accent);
+}
+
+.login-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 22px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-dim);
+    padding-top: 16px;
+    border-top: 1px solid rgba(179, 0, 255, 0.10);
+    letter-spacing: 1px;
+}
+
+/* ============================================================
+   BOOTLOADER (with Website Name)
+   ============================================================ */
+.boot-container {
+    background: rgba(0, 0, 0, 0.95);
+    padding: 40px 50px;
+    width: 700px;
+    max-width: 94%;
+    border: 3px solid var(--neon-primary);
+    border-radius: 20px;
+    box-shadow: 0 0 80px var(--neon-glow), inset 0 0 60px rgba(179, 0, 255, 0.05);
+    position: relative;
+    z-index: 20;
+}
+
+.boot-website-name {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary), var(--neon-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 6px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    animation: glitchPulse 3s infinite;
+}
+
+.boot-header {
+    display: flex;
+    justify-content: space-between;
+    color: var(--neon-secondary);
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 14px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px var(--neon-glow2);
+}
+
+.boot-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #1a0a2a;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 18px;
+    border: 1px solid rgba(179, 0, 255, 0.15);
+}
+
+.boot-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary), var(--neon-accent));
+    width: 0%;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 30px var(--neon-glow);
+}
+
+.boot-log {
+    height: 220px;
+    overflow-y: auto;
+    font-size: 15px;
+    line-height: 2;
+    color: #b388ff;
+    background: rgba(179, 0, 255, 0.03);
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(179, 0, 255, 0.08);
+    font-family: var(--font-main);
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+
+.boot-log .log-entry {
+    opacity: 0;
+    animation: logFade 0.3s forwards;
+}
+
+@keyframes logFade {
+    from {
+        opacity: 0;
+        transform: translateX(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.boot-log .log-entry .timestamp {
+    color: #553388;
+    margin-right: 14px;
+    font-weight: 800;
+}
+
+.boot-log .log-entry.success {
+    color: var(--neon-secondary);
+}
+.boot-log .log-entry.warning {
+    color: #ffaa44;
+}
+.boot-log .log-entry.error {
+    color: #ff2255;
+}
+.boot-log .log-entry.info {
+    color: #cc99ff;
+}
+
+.boot-status {
+    color: var(--neon-secondary);
+    font-size: 16px;
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: 2px;
+    animation: pulse 1.5s ease-in-out infinite;
+    text-shadow: 0 0 20px var(--neon-glow2);
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* ============================================================
+   MAIN APP SCREEN
+   ============================================================ */
+#appScreen {
+    display: none;
+    flex-direction: column;
+    background: transparent;
+    overflow: hidden;
+    position: relative;
+    z-index: 5;
+}
+#appScreen.active {
+    display: flex;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-left: 0;
+    position: relative;
+    z-index: 6;
+}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.top-bar {
+    background: rgba(10, 2, 20, 0.92);
+    border-bottom: 2px solid rgba(179, 0, 255, 0.18);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    min-height: 68px;
+    backdrop-filter: blur(20px);
+    z-index: 10;
+}
+
+.left-menu-btn {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--neon-primary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px 12px;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 20px var(--neon-glow);
+}
+
+.left-menu-btn:hover {
+    transform: scale(1.12);
+    text-shadow: 0 0 40px var(--neon-glow), 0 0 80px var(--neon-accent);
+}
+
+.right-menu-btn {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--neon-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px 12px;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 20px var(--neon-glow2);
+}
+
+.right-menu-btn:hover {
+    transform: scale(1.12);
+    text-shadow: 0 0 40px var(--neon-glow2), 0 0 80px var(--neon-accent);
+}
+
+#pageTitle {
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 4px;
+    margin: 0;
+    flex: 1;
+    padding-left: 20px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-count {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--neon-secondary);
+    text-shadow: 0 0 20px var(--neon-glow2);
+}
+
+/* ============================================================
+   NAV DRAWERS (Left & Right)
+   ============================================================ */
+.nav-drawer {
+    position: fixed;
+    top: 0;
+    height: 100%;
+    background: rgba(10, 2, 20, 0.97);
+    padding: 24px 0;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+    backdrop-filter: blur(30px);
+    overflow-y: auto;
+    width: 320px;
+}
+
+.left-drawer {
+    left: -340px;
+    border-right: 2px solid rgba(179, 0, 255, 0.18);
+}
+
+.left-drawer.open {
+    left: 0;
+}
+
+.right-drawer {
+    right: -340px;
+    border-left: 2px solid rgba(0, 245, 255, 0.18);
+}
+
+.right-drawer.open {
+    right: 0;
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px 18px;
+    border-bottom: 2px solid rgba(179, 0, 255, 0.10);
+}
+
+.drawer-header h2 {
+    font-size: 20px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 3px;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-size: 28px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    color: var(--neon-accent);
+    transform: rotate(90deg);
+}
+
+.drawer-menu {
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+}
+
+.drawer-menu li {
+    padding: 16px 28px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 18px;
+    font-weight: 800;
+    border-left: 4px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    letter-spacing: 1px;
+    text-align: left;
+}
+
+.drawer-menu li:hover {
+    background: rgba(179, 0, 255, 0.08);
+    color: var(--neon-secondary);
+    border-left-color: var(--neon-secondary);
+    box-shadow: inset 0 0 30px rgba(179, 0, 255, 0.04);
+}
+
+.drawer-menu li.active {
+    color: var(--neon-primary);
+    border-left-color: var(--neon-primary);
+    background: rgba(179, 0, 255, 0.10);
+    text-shadow: 0 0 20px var(--neon-glow);
+}
+
+.drawer-menu li.danger {
+    color: #ff2255;
+    border-top: 2px solid rgba(255, 34, 85, 0.10);
+    margin-top: 8px;
+}
+
+.drawer-menu li.danger:hover {
+    background: rgba(255, 34, 85, 0.08);
+    border-left-color: #ff2255;
+}
+
+/* Right drawer specific styles */
+.right-drawer .drawer-menu li {
+    border-left: none;
+    border-right: 4px solid transparent;
+    text-align: right;
+    justify-content: flex-end;
+}
+
+.right-drawer .drawer-menu li:hover {
+    border-left: none;
+    border-right-color: var(--neon-secondary);
+}
+
+.right-drawer .drawer-menu li.active {
+    border-left: none;
+    border-right-color: var(--neon-primary);
+}
+
+/* ============================================================
+   PAGE CONTENT
+   ============================================================ */
+.page-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(179, 0, 255, 0.05) 0%, transparent 70%);
+    position: relative;
+    z-index: 5;
+}
+
+.page-content::-webkit-scrollbar {
+    width: 8px;
+}
+.page-content::-webkit-scrollbar-track {
+    background: rgba(179, 0, 255, 0.04);
+}
+.page-content::-webkit-scrollbar-thumb {
+    background: var(--neon-primary);
+    border-radius: 4px;
+    box-shadow: 0 0 20px var(--neon-glow);
+}
+
+/* ============================================================
+   HOME PAGE - DASHBOARD GRID
+   ============================================================ */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 22px;
+    padding: 6px 0;
+}
+
+.dashboard-card {
+    background: var(--bg-panel);
+    border: 2px solid rgba(179, 0, 255, 0.12);
+    border-radius: 18px;
+    padding: 28px 24px;
+    transition: all 0.35s ease;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(179, 0, 255, 0.05) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.dashboard-card:hover::before {
+    opacity: 1;
+}
+
+.dashboard-card:hover {
+    border-color: var(--neon-primary);
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 12px 50px var(--neon-glow), inset 0 0 40px rgba(179, 0, 255, 0.04);
+}
+
+.dashboard-card .card-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.dashboard-card .card-title {
+    color: var(--neon-secondary);
+    font-size: 24px;
+    font-weight: 900;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 20px var(--neon-glow2);
+}
+
+.dashboard-card .card-desc {
+    color: var(--text-secondary);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.6;
+    opacity: 0.85;
+}
+
+.dashboard-card .card-badge {
+    display: inline-block;
+    margin-top: 12px;
+    background: linear-gradient(135deg, rgba(179, 0, 255, 0.20), rgba(0, 245, 255, 0.10));
+    color: var(--neon-secondary);
+    padding: 5px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    border: 1px solid rgba(179, 0, 255, 0.15);
+}
+
+/* ============================================================
+   LIVE MONITORS (without System Uptime)
+   ============================================================ */
+.live-monitors {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.monitor-item {
+    background: var(--bg-panel);
+    border: 2px solid rgba(179, 0, 255, 0.08);
+    border-radius: 14px;
+    padding: 20px 18px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.monitor-item .monitor-label {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.monitor-item .monitor-value {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--neon-primary);
+    margin-top: 4px;
+    text-shadow: 0 0 30px var(--neon-glow);
+}
+
+.monitor-item .monitor-value.accent {
+    color: var(--neon-secondary);
+    text-shadow: 0 0 30px var(--neon-glow2);
+}
+.monitor-item .monitor-value.danger {
+    color: #ff2255;
+    text-shadow: 0 0 30px rgba(255, 34, 85, 0.5);
+}
+.monitor-item .monitor-value.success {
+    color: #44ff88;
+    text-shadow: 0 0 30px rgba(68, 255, 136, 0.4);
+}
+
+/* ============================================================
+   DETAIL PANEL
+   ============================================================ */
+.detail-panel {
+    padding: 24px;
+    background: var(--bg-panel);
+    border: 2px solid rgba(179, 0, 255, 0.12);
+    border-radius: 18px;
+    backdrop-filter: blur(10px);
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.detail-panel::-webkit-scrollbar {
+    width: 6px;
+}
+.detail-panel::-webkit-scrollbar-track {
+    background: rgba(179, 0, 255, 0.04);
+}
+.detail-panel::-webkit-scrollbar-thumb {
+    background: var(--neon-primary);
+    border-radius: 4px;
+    box-shadow: 0 0 20px var(--neon-glow);
+}
+
+.detail-panel h2 {
+    font-size: 32px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 14px;
+    letter-spacing: 3px;
+}
+
+.detail-panel .info-block {
+    background: rgba(179, 0, 255, 0.04);
+    border-left: 4px solid var(--neon-primary);
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin: 8px 0;
+}
+
+.detail-panel .info-block strong {
+    color: var(--neon-secondary);
+}
+
+/* ============================================================
+   BACK BUTTON
+   ============================================================ */
+.back-btn {
+    background: transparent;
+    color: var(--neon-secondary);
+    border: 2px solid var(--neon-secondary);
+    border-radius: 12px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 900;
+    font-family: var(--font-main);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.08);
+}
+
+.back-btn:hover {
+    background: rgba(0, 245, 255, 0.08);
+    box-shadow: 0 0 40px rgba(0, 245, 255, 0.20);
+    transform: scale(1.03);
+}
+
+/* ============================================================
+   BUTTONS inside details
+   ============================================================ */
+.btn-action {
+    padding: 14px 32px;
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-accent));
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 900;
+    font-family: var(--font-main);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 0 30px var(--neon-glow);
+    margin: 4px 6px 4px 0;
+}
+
+.btn-action:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 50px var(--neon-glow), 0 0 80px var(--neon-accent);
+}
+
+.btn-action-outline {
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--neon-secondary);
+    border: 2px solid var(--neon-secondary);
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 900;
+    font-family: var(--font-main);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 4px 6px 4px 0;
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.08);
+}
+
+.btn-action-outline:hover {
+    background: rgba(0, 245, 255, 0.08);
+    box-shadow: 0 0 40px rgba(0, 245, 255, 0.20);
+    transform: scale(1.03);
+}
+
+/* ============================================================
+   PAYMENT MODAL
+   ============================================================ */
+.payment-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(16px);
+}
+
+.payment-modal .modal-box {
+    background: var(--bg-panel);
+    border: 2px solid var(--neon-primary);
+    border-radius: 22px;
+    padding: 40px 36px;
+    max-width: 440px;
+    width: 94%;
+    box-shadow: 0 0 80px var(--neon-glow);
+}
+
+.payment-modal .modal-box h3 {
+    font-size: 28px;
+    font-weight: 900;
+    text-align: center;
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+}
+
+.payment-modal .modal-box .modal-sub {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.payment-modal .modal-box .payment-btn {
+    width: 100%;
+    padding: 16px;
+    background: rgba(179, 0, 255, 0.08);
+    border: 2px solid rgba(179, 0, 255, 0.20);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 17px;
+    font-weight: 900;
+    font-family: var(--font-main);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.payment-modal .modal-box .payment-btn:hover {
+    border-color: var(--neon-primary);
+    background: rgba(179, 0, 255, 0.14);
+    box-shadow: 0 0 30px var(--neon-glow);
+}
+
+.payment-modal .modal-box .close-modal {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 12px;
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 8px;
+    transition: all 0.3s ease;
+}
+
+.payment-modal .modal-box .close-modal:hover {
+    color: var(--neon-accent);
+}
+
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+.toast {
+    position: fixed;
+    top: 85px;
+    right: 24px;
+    background: var(--bg-panel);
+    border: 2px solid var(--neon-primary);
+    border-radius: 14px;
+    padding: 18px 24px;
+    color: var(--text-primary);
+    font-weight: 900;
+    font-size: 17px;
+    z-index: 9999;
+    max-width: 440px;
+    box-shadow: 0 0 60px var(--neon-glow), inset 0 0 30px rgba(179, 0, 255, 0.04);
+    backdrop-filter: blur(20px);
+    animation: slideInRight 0.35s ease;
+    letter-spacing: 0.5px;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(80px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.toast.success {
+    border-color: var(--neon-secondary);
+}
+.toast.error {
+    border-color: #ff2255;
+}
+.toast.warning {
+    border-color: #ffaa44;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .login-box {
+        padding: 32px 20px;
+        width: 94%;
+    }
+    .login-header h1 {
+        font-size: 26px;
+        letter-spacing: 3px;
+    }
+    .boot-container {
+        padding: 24px 18px;
+        width: 94%;
+    }
+    .boot-website-name {
+        font-size: 20px;
+        letter-spacing: 4px;
+    }
+    .boot-log {
+        height: 150px;
+        font-size: 13px;
+    }
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    .live-monitors {
+        grid-template-columns: 1fr 1fr;
+    }
+    .top-bar {
+        padding: 10px 14px;
+        min-height: 56px;
+    }
+    #pageTitle {
+        font-size: 18px;
+        padding-left: 10px;
+        letter-spacing: 2px;
+    }
+    .nav-drawer {
+        width: 280px;
+    }
+    .left-drawer {
+        left: -300px;
+    }
+    .right-drawer {
+        right: -300px;
+    }
+    .left-menu-btn,
+    .right-menu-btn {
+        font-size: 26px;
+    }
+    .page-content {
+        padding: 14px;
+    }
+    .dashboard-card .card-title {
+        font-size: 20px;
+    }
+    .user-count {
+        font-size: 13px;
+    }
+    .detail-panel h2 {
+        font-size: 22px;
+    }
+    .drawer-menu li {
+        font-size: 16px;
+        padding: 14px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-header h1 {
+        font-size: 20px;
+        letter-spacing: 2px;
+    }
+    .login-header .subtitle {
+        font-size: 12px;
+    }
+    .btn-primary {
+        font-size: 15px;
+        padding: 12px;
+    }
+    .live-monitors {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .monitor-item .monitor-value {
+        font-size: 20px;
+    }
+    .top-bar-right .user-count {
+        font-size: 11px;
+    }
+    #pageTitle {
+        font-size: 15px;
+    }
+    .dashboard-card .card-title {
+        font-size: 17px;
+    }
+    .dashboard-card .card-desc {
+        font-size: 13px;
+    }
+    .boot-log {
+        height: 110px;
+        font-size: 11px;
+    }
+    .detail-panel {
+        padding: 12px;
+    }
+    .detail-panel h2 {
+        font-size: 18px;
+    }
+    .nav-drawer {
+        width: 260px;
+    }
+    .left-drawer {
+        left: -280px;
+    }
+    .right-drawer {
+        right: -280px;
+    }
+    .drawer-menu li {
+        font-size: 14px;
+        padding: 12px 16px;
+    }
+}
+
+/* ============================================================
+   HIDDEN UTILITY
+   ============================================================ */
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEXUS: OVERRIDE v5.4</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ============================================================
+    MATRIX RAIN CANVAS
+    ============================================================ -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <!-- ============================================================
+    LOGIN SCREEN
+    ============================================================ -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-box">
+                <div class="login-header">
+                    <h1>NEXUS: OVERRIDE</h1>
+                    <p class="subtitle">⚡ KaliDroid Accounts ⚡</p>
+                    <p class="sub-sub">Admins manage the fleet · users report bugs &amp; track support tickets.</p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="username" autocomplete="off" />
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="password" />
+                    </div>
+                    <button type="submit" class="btn-primary">SIGN IN</button>
+                </form>
+
+                <div class="login-footer">
+                    <span>🔒 Encrypted Connection</span>
+                    <span>⚡ v5.4</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    BOOTLOADER SCREEN (Login - with Website Name)
+    ============================================================ -->
+    <div id="bootloaderScreen" class="screen">
+        <div class="boot-container">
+            <div class="boot-website-name">NEXUS: OVERRIDE</div>
+            <div class="boot-header">
+                <span class="boot-title">⧩ INITIALIZING SYSTEM</span>
+                <span id="bootProgress">0%</span>
+            </div>
+            <div class="boot-progress-bar">
+                <div id="bootProgressBar" class="boot-progress-fill"></div>
+            </div>
+            <div id="bootLog" class="boot-log"></div>
+            <div class="boot-status">
+                <span id="bootStatusText">Awaiting command...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    BOOTLOADER SCREEN (Logout)
+    ============================================================ -->
+    <div id="logoutBootloaderScreen" class="screen">
+        <div class="boot-container">
+            <div class="boot-website-name">NEXUS: OVERRIDE</div>
+            <div class="boot-header">
+                <span class="boot-title">⧩ TERMINATING SESSION</span>
+                <span id="logoutBootProgress">0%</span>
+            </div>
+            <div class="boot-progress-bar">
+                <div id="logoutBootProgressBar" class="boot-progress-fill"></div>
+            </div>
+            <div id="logoutBootLog" class="boot-log"></div>
+            <div class="boot-status">
+                <span id="logoutBootStatusText">Shutting down...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MAIN APP SCREEN
+    ============================================================ -->
+    <div id="appScreen" class="screen">
+
+        <!-- LEFT NAV DRAWER -->
+        <nav id="leftDrawer" class="nav-drawer left-drawer">
+            <div class="drawer-header">
+                <h2>☰ NEXUS MENU</h2>
+                <button id="closeLeftDrawer" class="close-btn">✕</button>
+            </div>
+            <ul class="drawer-menu">
+                <li data-page="home" class="active">🏠 Home</li>
+                <li data-page="deploy">🚀 Deploy Sites</li>
+                <li data-page="about">ℹ️ About</li>
+                <li data-page="signout" class="danger">🚪 Sign Out</li>
+            </ul>
+        </nav>
+
+        <!-- RIGHT NAV DRAWER (Services & Settings) -->
+        <nav id="rightDrawer" class="nav-drawer right-drawer">
+            <div class="drawer-header">
+                <h2>⚙️ SERVICES</h2>
+                <button id="closeRightDrawer" class="close-btn">✕</button>
+            </div>
+            <ul class="drawer-menu">
+                <li data-page="services">📡 Services</li>
+                <li data-page="settings">⚙️ Settings</li>
+                <li data-page="notifications">🔔 Notifications</li>
+            </ul>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+
+            <!-- TOP BAR -->
+            <header class="top-bar">
+                <button id="leftMenuToggle" class="menu-btn left-menu-btn">☰</button>
+                <h1 id="pageTitle">HOME</h1>
+                <div class="top-bar-right">
+                    <span class="user-count">👤 <span id="userCount">1</span> online</span>
+                    <button id="rightMenuToggle" class="menu-btn right-menu-btn">⋮</button>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <div id="pageContent" class="page-content">
+                <!-- dynamically loaded -->
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
